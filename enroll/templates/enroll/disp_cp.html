@@ -1,0 +1,221 @@
+{% extends 'enroll/base.html'%}
+{% block style %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+<style>
+	
+	html {
+  font-size: 92.5%; }
+.a{
+	text-decoration: none;
+}
+
+.row {
+  max-width: 80rem;
+  margin: 0 auto; 
+}
+.main-body{
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around;
+    
+}
+.add{
+    /* background-color: aqua; */
+    display: flex;
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+.greetmsg{
+    /* max-width: 80%; */
+   /* background-color: blue; */
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 350;
+
+
+}
+   
+   </style>
+{% endblock style %}
+{% block content %}
+{%load static%}
+{% csrf_token %}
+<div class="page-content">
+    <div class="row" >
+        <div class="col-md-5  main-body">
+            <h2>Best Company's Preferences</h2>
+            
+            <p class="add">Here's your result based on the skills you acquire!!</p>
+        </div>
+        <div id="container" class="col-md-7">
+            <canvas id="pie-chart"></canvas>        
+        </div>
+    </div>
+</div>
+    
+{%if dd%}
+
+        <center>
+            <form action="{% url 'search' %}" method="post">
+                {% csrf_token %}
+            <div class=" job-search-form">
+            <div class="input-group col-md-6">
+              <input type="text" class="form-control" name="search" placeholder="Job Title, Keywords Or Company Name">
+              <div class="input-group-prepend">
+                <button class="site-button">Search</button>
+              </div>
+            </div>
+            </div>
+            </form>
+            {% if uploaded_file_url %}
+    <p style="font-size: 20px;"><b>Click Here to View Your resume: </b><a href="{{ uploaded_file_url }}" style="background-color: aliceblue;font-size: 20px;">{{ uploaded_file_url }}</a></p>   
+                </center>
+                {% endif %}
+        </center><br><br>
+        <div class="row infinite-container">
+            {% for i in page.object_list %}
+            <div class="col-lg-12  infinite-item">
+                <ul class="post-job-bx">
+                    <li>
+                        <a href="#" style="text-decoration: none;">
+                            <div class="d-flex m-b30">
+                                <div class="job-post-info">
+                                    <h4>{{i.comp_name|truncatechars:50}}</h4>
+                                    <ul>
+                                        <li><i class="fa fa-map-marker"></i>{{i.comp_role}}</li>
+                                        <li><i class="fa fa-bookmark-o"></i> Full Time</li>
+                                        <li><i class="fa fa-clock-o"></i>{{i.comp_exp}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <span class="post-like fa fa-heart-o"></span>
+                        </a>
+                    </li>
+                </ul>
+                <br><br>
+            </div>
+            {% endfor %}
+            
+        </div>
+
+        <div class="d-flex justify-content-center" style="display:none;">
+            <div class="spinner-border text-primary loading" role="status" style="width: 20px;height: 20px;border-radius: 50%;border-top: 2px solid blue;">
+                <span class="sr-only">Loading...</span>
+       </div>
+    </div>
+        <div class="row">
+        <div class="col-12">
+            {% if page.has_next %}
+            <a class="infinite-more-link" href="{%url 'pagination' %}?page={{ page.next_page_number }}"></a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+<footer class="site-footer">
+    <div class="footer-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5 col-lg-4 col-md-12 col-sm-12">
+                    <div class="widget">
+                        <img src="static/enroll/images/logo-white.png" width="180" class="m-b15" alt=""/>
+                        <p class="text-capitalize m-b20">Get Recommendations of Companies, Institutes & Analyze your Resume based on many different parameteres</p>
+                        <div class="subscribe-form m-b20">
+                            <form class="dzSubscribe" action="http://job-board.w3itexperts.com/xhtml/script/mailchamp.php" method="post">
+                                <div class="dzSubscribeMsg"></div>
+                                <div class="input-group">
+                                    <input name="dzEmail" required="required"  class="form-control" placeholder="Your Email Id" type="email">
+                                    <span class="input-group-btn">
+                                        <button name="submit" value="Submit" type="submit" class="site-button radius-xl">Subscribe</button>
+                                    </span> 
+                                </div>
+                            </form>
+                        </div>
+                        <ul class="list-inline m-a0">
+                            <li><a href="#" class="site-button white facebook circle "><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#" class="site-button white google-plus circle "><i class="fa fa-google-plus"></i></a></li>
+                            <li><a href="#" class="site-button white linkedin circle "><i class="fa fa-linkedin"></i></a></li>
+                            <li><a href="#" class="site-button white instagram circle "><i class="fa fa-instagram"></i></a></li>
+                            <li><a href="#" class="site-button white twitter circle "><i class="fa fa-twitter"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+               <div class="col-xl-5 col-lg-5 col-md-8 col-sm-8 col-12">
+                        <div class="widget border-0">
+                            <h5 class="m-b30 text-white">USEFUL LINKS</h5>
+                            <ul class="list-2 list-line">
+                                <li><a href="#">Privacy & Securty</a></li>
+                                <li><a href="#">Terms of Services</a></li>
+                                <li><a href="#">Communications</a></li>
+                                <li><a href="#">Support</a></li>
+                                <li><a href="#">How It Works</a></li>
+                                <li><a href="#">Your Account</a></li>
+                                <li><a href="#">Contact Us</a></li>
+                                <li><a href="#">Join our team</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4 col-12">
+                        <div class="widget border-0">
+                            <h5 class="m-b30 text-white">SERVICES</h5>
+                            <ul class="list-2 w10 list-line">
+                                <li><a href="{% url 'predict' %}">Institutes Recommendation</a></li>
+                                <li><a href="{% url 'job_search' %}">Get Best Company's preferences </a></li>
+                                <li><a href="{% url 'rsm_a' %}">Resume Analyser</a></li>
+                               
+                            </ul>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- footer bottom part -->
+</footer>
+{% endblock content %}
+
+{% block script %}
+        <script src="static/enroll/js/jquery.waypoints.min.js"></script>
+        <script src="static/enroll/js/infinite.min.js"></script>
+        <script>
+    
+            var infinite = new Waypoint.Infinite({
+                element: $('.infinite-container')[0],
+    
+                offset: 'bottom-in-view',
+    
+                onBeforePageLoad: function () {
+                    $('.loading').show();
+                },
+                onAfterPageLoad: function () {
+                    $('.loading').hide();
+                }
+    
+            });
+    
+            let mybutton = document.getElementById("btn-back-to-top");
+    
+    // When the user scrolls down 20px from the top of the document, show the button
+    window.onscroll = function () {
+      scrollFunction();
+    };
+    
+    function scrollFunction() {
+      if (
+        document.body.scrollTop > 20 ||
+        document.documentElement.scrollTop > 20
+      ) {
+        mybutton.style.display = "block";
+      } else {
+        mybutton.style.display = "none";
+      }
+    }
+    // When the user clicks on the button, scroll to the top of the document
+    mybutton.addEventListener("click", backToTop);
+    
+    function backToTop() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
+    }
+        </script>
+    
+    
+    {% endblock script %}
