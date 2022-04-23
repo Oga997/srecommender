@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath app Finalyear.wsgi
+web: gunicorn Finalyear.wsgi
