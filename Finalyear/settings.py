@@ -29,7 +29,9 @@ SECRET_KEY = 'django-insecure-$i1m7=jtlz)&qcm^#tbo7ri@q(mm7s^+5zj3&)$_ag3)!h6=pk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://smartrecommender.herokuapp.com/',
+‘localhost’,
+‘127.0.0.1’]
 
 
 # Application definition
