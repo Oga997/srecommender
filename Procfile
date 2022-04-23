@@ -1,1 +1,3 @@
-web: gunicorn Finalyear.wsgi
+web: gunicorn Finalyear.wsgi:application --log-file - --log-level debug
+python manage.py collectstatic --noinput
+manage.py migrate
