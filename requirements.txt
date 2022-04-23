@@ -46,6 +46,7 @@ psycopg2==2.9.3
 pycountry==22.3.5
 pycparser==2.21
 pydantic==1.8.2
+python==3.8
 PyMuPDF==1.19.6
 pyparsing==3.0.8
 PyPDF2==1.27.8
