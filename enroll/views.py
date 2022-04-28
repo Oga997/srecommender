@@ -24,13 +24,8 @@ import string
 from tika import parser
 from nltk.tokenize import word_tokenize 
 from django.http import HttpResponseRedirect
-import json
 from django.core.paginator import Paginator
 import csv
-import PyPDF2
-from pdf2docx import parse ,Converter
-import docx2txt
-from pdfminer.high_level import extract_text
 from spacy.matcher import Matcher
 import locationtagger
 nlp = spacy.load('en_core_web_sm')
@@ -311,15 +306,13 @@ def rsm_a(request):
 			uploaded_file_url = fs.url(filename)
 			extension=filename.split(".")[-1]
 			urls=extract_urls(uploaded_file_path)
-			if extension=='docx':
-				text=extract_text_from_docx(uploaded_file_path)
-			elif extension == 'pdf':
-				text=extract_text_from_pdf(uploaded_file_path)
-				convert_pdf_to_docx(uploaded_file_path)
-				resume_text=extract_text_from_docx('./demo.docx')    
-			else:
-				pass
-			if((text != '' ) and (resume_text != '')):
+			newResumeTxtFile = open('D:\DJANGO_PATH\SR_AS\sample.txt', 'w',encoding='utf-8')
+			resumeFile =uploaded_file_path
+			resumeFileData = parser.from_file(resumeFile)
+			fileContent = resumeFileData['content']
+			newResumeTxtFile.write(fileContent)
+			resume_text=fileContent
+			if(resume_text != ''):
 				"""-----------0------------"""
 				name=proper_name(resume_text)
 				if(name==''):
@@ -327,22 +320,22 @@ def rsm_a(request):
 				else:
 					data.append(name)
 				"""-----------1-------------"""
-				phone_number=extract_phone_number(text)
+				phone_number=extract_phone_number(resume_text)
 				if(phone_number==''):
 					data.append(None)
 				else:
 					data.append(phone_number)
 				"""-----------2-------------"""
-				emails=extract_emails(text)
+				emails=extract_emails(resume_text)
 				if len(emails):
 					data.append(emails[0])
 				else:
 					data.append(None)
 				"""-----------3-------------"""
-				skills_list=list(extract_skills(text))
+				skills_list=list(extract_skills(resume_text))
 				data.append(skills_list)
 				"""-----------4-------------"""
-				skills_score=extract_skills_score(text)
+				skills_score=extract_skills_score(resume_text)
 				data.append(skills_score)
 				"""-----------5-------------"""
 				linkedin_urls=extract_linkedin(urls)
@@ -357,7 +350,7 @@ def rsm_a(request):
 				else:
 					data.append(Github_urls)
 				"""-----------7-------------"""
-				education_score=Validation_education(text)
+				education_score=Validation_education(resume_text)
 				data.append(education_score)
 				"--------------8---------------"
 				experience_score=Validation_experience(resume_text)
@@ -429,23 +422,6 @@ def display(request):
 		'totMarks':totMarks,
 		
 	})  
-
-def extract_text_from_pdf(pdf_path):
-	return extract_text(pdf_path)
-
-"""----------------------------------------------------------------------"""
-def extract_text_from_docx(docx_path):
-	txt = docx2txt.process(docx_path)
-	if txt:
-		return txt.replace('\t',' ')
-	return None
-"""----------------------------------------------------------------------"""
-def convert_pdf_to_docx(pdf_path):
-		docx_path='./demo.docx'
-		cv=Converter(pdf_path)
-		cv.convert(docx_path,start=0,end=None)
-		cv.close()
-
 
 """----------------------------------------------------------------------"""
 #Extracting Name Method 1
