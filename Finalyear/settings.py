@@ -35,6 +35,7 @@ ALLOWED_HOSTS = ['https://smartrecommender.herokuapp.com/',
 '127.0.0.1']
 
 nltk.download('stopwords')
+nltk.download('punkt')
 
 
 
