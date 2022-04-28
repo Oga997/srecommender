@@ -43,7 +43,7 @@ def predict(request):
 """-----------------------------------------------------------------------------"""
 def result(request):
 	if request.method=='POST' and request.POST.get('nata'):
-		df=pd.read_csv(r"D:\7 sem\Project data\12-clg-Arch\12-ARCH-final-done.csv")
+		df=pd.read_csv(r"./data/12-ARCH-final-done.csv")
 		count = CountVectorizer(stop_words='english')
 		count_matrix = count.fit_transform(df[['AllIndia']])
 		cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
@@ -59,13 +59,47 @@ def result(request):
 		return render(request,'enroll/predict.html',{'data':data})
 
 	if request.method=='POST' and request.POST.get('ct'):
-		df=pd.read_csv(r"D:\7 sem\Project data\12-clg-Pharma\12_PHARM_fin.csv")
+		df=pd.read_csv(r"./data/12_PHARM_fin.csv")
 		count = CountVectorizer(stop_words='english')
 		count_matrix = count.fit_transform(df[['AllIndia']])
 		cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
 		indices = pd.Series(df.index, index=df['college_name'])
 		clgs = [df['AllIndia'][i] for i in range(len(df['AllIndia']))]
 		score=float(request.POST.get('ct',''))
+		cosine_sim = cosine_similarity(count_matrix, count_matrix)
+		idx=df.loc[df.AllIndia<=score,['college_img','college_name','college_loc','college_course','college_fees','AllIndia','Open','Minority']]
+		idx=idx[:10]
+		result_final = idx
+		result_final=result_final.to_json(orient='records')
+		data=[]
+		data=json.loads(result_final)	
+		return render(request,'enroll/predict.html',{'data':data})
+
+	if request.method=='POST' and request.POST.get('neet'):
+		df=pd.read_csv(r"./data/12_MBBS_final.csv")
+		count = CountVectorizer(stop_words='english')
+		count_matrix = count.fit_transform(df[['CutOff']])
+		cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
+		indices = pd.Series(df.index, index=df['college_name'])
+		clgs = [df['CutOff'][i] for i in range(len(df['CutOff']))]
+		score=str(request.POST.get('neet',''))
+		cosine_sim = cosine_similarity(count_matrix, count_matrix)
+		idx=df.loc[df.CutOff<=score,['college_img','college_name','college_loc','college_course','college_fees','CutOff']]
+		idx=idx[:10]
+		result_final = idx
+		result_final=result_final.to_json(orient='records')
+		data=[]
+		data=json.loads(result_final)	
+		return render(request,'enroll/predict.html',{'data':data})
+
+	if request.method=='POST' and request.POST.get('jc3'):
+		df=pd.read_csv(r"./data/ENGG_Comps_final.csv")
+		count = CountVectorizer(stop_words='english')
+		count_matrix = count.fit_transform(df[['AllIndia']])
+		cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
+		indices = pd.Series(df.index, index=df['college_name'])
+		clgs = [df['AllIndia'][i] for i in range(len(df['AllIndia']))]
+		score=float(request.POST.get('jc3',''))
 		cosine_sim = cosine_similarity(count_matrix, count_matrix)
 		idx=df.loc[df.AllIndia<=score,['college_img','college_name','college_loc','college_course','college_fees','AllIndia','Open','Minority']]
 		idx=idx[:10]
@@ -85,12 +119,12 @@ def job_search(request):
 			filename = fs.save(myfile.name, myfile)
 			uploaded_file_path = fs.path(filename)
 			uploaded_file_url = fs.url(filename)
-			skillDataset = pd.read_csv(r"D:\7 sem\Project data\Companies-data\testing\companies_data.csv")
+			skillDataset = pd.read_csv(r"./data/companies_data.csv")
 			skills = list(skillDataset['comp_skills'])
 			cleanedskillList = [x for x in skills if str(x) != 'nan']
 			cleanedskillList = [i.split()[0] for i in skills]
 			skillsList=cleanedskillList	
-			newResumeTxtFile = open('D:\DJANGO_PATH\SR_AS\sample.txt', 'w',encoding='utf-8')
+			newResumeTxtFile = open('sample.txt', 'w',encoding='utf-8')
 			resumeFile =uploaded_file_path
 			resumeFileData = parser.from_file(resumeFile)
 			fileContent = resumeFileData['content']
@@ -107,7 +141,7 @@ def job_search(request):
 			df.drop_duplicates(keep='first',inplace=True)
 			filtered_sentence.clear()
 			cp_data.clear()
-			df1 = pd.read_csv(r"D:\7 sem\Project data\Companies-data\testing\companies_data.csv")
+			df1 = pd.read_csv(r"./data/companies_data.csv")
 			df1['comp_skills'] = df1['comp_skills'].str.split()
 			df1['matchedName'] = df1['comp_skills'].apply(lambda x: [item for item in x if item in df['candi_skills'].tolist()])
 			df1['mskills'] = [','.join(map(str, l)) for l in df1['matchedName']]
@@ -118,7 +152,7 @@ def job_search(request):
 			df1.drop(['comp_skills'],axis=1,inplace=True)
 			df1.drop_duplicates(keep='first',inplace=True)
 			dfz = df1.reset_index(drop=True)
-			dfc=dfz.to_csv('D:\DJANGO_PATH\SR_AS\search_file.csv',index=False)
+			dfc=dfz.to_csv('./data/search_file.csv',index=False)
 			return redirect('disp_cp')
 	else:
 		messages.info(request,"Please Login In Order To Access the Features")
@@ -127,7 +161,7 @@ def job_search(request):
 	return render(request,'enroll/job_search.html')
 """-----------------------------------------------------------------------------"""
 def loadSkillDataset():
-	skillDataset = pd.read_csv(r"D:\7 sem\Project data\Companies-data\testing\companies_data.csv")
+	skillDataset = pd.read_csv(r"./data/companies_data.csv")
 	skills = list(skillDataset['comp_skills'])
 	cleanedskillList = [x for x in skills if str(x) != 'nan']
 	return cleanedskillList
@@ -181,10 +215,10 @@ def ResumeSkillExtractor(resumeTechnicalSkillSpecificationList,filteredTextForSk
 """-----------------------------------------------------------------------------"""
 def disp_cp(request):
 	filtered_sentence.clear()
-	result_final = pd.read_csv(r"D:\DJANGO_PATH\SR_AS\search_file.csv")
+	result_final = pd.read_csv(r"./data/search_file.csv")
 	result_final=result_final.to_json(orient='records')
 	data=json.loads(result_final)	
-	rd=pd.read_csv(r"D:\DJANGO_PATH\SR_AS\search_file.csv")
+	rd=pd.read_csv(r"data\search_file.csv")
 	jobs = rd.to_dict(orient='records')
 	job_paginator = Paginator(jobs,20)
 	page_num = request.GET.get('page')
@@ -193,7 +227,7 @@ def disp_cp(request):
 
 
 """-----------------------------------------------------------------------------"""
-dfc=pd.read_csv(r"search_file.csv")
+dfc=pd.read_csv(r"./data/search_file.csv")
 regex=skillsList
 def search(request):
 	if request.method == 'POST' and request.POST.get('search'):
@@ -216,7 +250,7 @@ def search(request):
 	return render(request,'enroll/search.html')
 """-----------------------------------------------------------------------------"""
 def pagination(request):
-	rd=pd.read_csv(r"D:\DJANGO_PATH\SR_AS\search_file.csv")
+	rd=pd.read_csv(r"./data/search_file.csv")
 	jobs = rd.to_dict(orient='records')
 
 	job_paginator = Paginator(jobs, 20)
@@ -306,7 +340,7 @@ def rsm_a(request):
 			uploaded_file_url = fs.url(filename)
 			extension=filename.split(".")[-1]
 			urls=extract_urls(uploaded_file_path)
-			newResumeTxtFile = open('D:\DJANGO_PATH\SR_AS\sample.txt', 'w',encoding='utf-8')
+			newResumeTxtFile = open('sample.txt', 'w',encoding='utf-8')
 			resumeFile =uploaded_file_path
 			resumeFileData = parser.from_file(resumeFile)
 			fileContent = resumeFileData['content']
