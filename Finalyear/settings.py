@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 import django_heroku
+import nltk
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,6 +33,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['https://smartrecommender.herokuapp.com/',
 'localhost',
 '127.0.0.1']
+
+nltk.download('stopwords')
+
 
 
 # Application definition
