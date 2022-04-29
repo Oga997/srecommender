@@ -128,7 +128,7 @@ def job_search(request):
 			skillsList=cleanedskillList	
 			newResumeTxtFile = open('sample.txt', 'w',encoding='utf-8')
 			resumeFile =uploaded_file_path
-			resumeFileData = parser.from_file(resumeFile)
+			resumeFileData = parser.from_file('sample.txt')
 			fileContent = resumeFileData['content']
 			newResumeTxtFile.write(fileContent)
 			obtainedResumeText=fileContent
