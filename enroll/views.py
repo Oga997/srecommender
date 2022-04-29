@@ -28,6 +28,7 @@ from nltk.tokenize import word_tokenize
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
 import csv
+import PyPDF2
 from spacy.matcher import Matcher
 import locationtagger
 nlp = spacy.load('en_core_web_sm')
