@@ -220,7 +220,7 @@ def disp_cp(request):
 	result_final = pd.read_csv(r"./data/search_file.csv")
 	result_final=result_final.to_json(orient='records')
 	data=json.loads(result_final)	
-	rd=pd.read_csv(r"data\search_file.csv")
+	rd=pd.read_csv(r"./data/search_file.csv")
 	jobs = rd.to_dict(orient='records')
 	job_paginator = Paginator(jobs,20)
 	page_num = request.GET.get('page')
