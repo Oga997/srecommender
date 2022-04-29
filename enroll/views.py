@@ -21,7 +21,9 @@ import nltk
 import spacy
 from nltk.corpus import stopwords
 import string
+import tika
 from tika import parser
+tika.initVM()
 from nltk.tokenize import word_tokenize 
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
