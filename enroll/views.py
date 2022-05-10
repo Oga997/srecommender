@@ -111,6 +111,57 @@ def result(request):
 		data=[]
 		data=json.loads(result_final)	
 		return render(request,'enroll/predict.html',{'data':data})
+
+	if request.method=='POST' and request.POST.get('jc2'):
+		df=pd.read_csv(r"./data/ENGG_Civil.csv")
+		count = CountVectorizer(stop_words='english')
+		count_matrix = count.fit_transform(df[['AllIndia']])
+		cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
+		indices = pd.Series(df.index, index=df['college_name'])
+		clgs = [df['AllIndia'][i] for i in range(len(df['AllIndia']))]
+		score=float(request.POST.get('jc2',''))
+		cosine_sim = cosine_similarity(count_matrix, count_matrix)
+		idx=df.loc[df.AllIndia<=score,['college_img','college_name','college_loc','college_course','college_fees','AllIndia','Open','Minority']]
+		idx=idx[:10]
+		result_final = idx
+		result_final=result_final.to_json(orient='records')
+		data=[]
+		data=json.loads(result_final)	
+		return render(request,'enroll/predict.html',{'data':data})
+
+	if request.method=='POST' and request.POST.get('jc5'):
+		df=pd.read_csv(r"./data/ENGG_Extc.csv")
+		count = CountVectorizer(stop_words='english')
+		count_matrix = count.fit_transform(df[['AllIndia']])
+		cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
+		indices = pd.Series(df.index, index=df['college_name'])
+		clgs = [df['AllIndia'][i] for i in range(len(df['AllIndia']))]
+		score=float(request.POST.get('jc5',''))
+		cosine_sim = cosine_similarity(count_matrix, count_matrix)
+		idx=df.loc[df.AllIndia<=score,['college_img','college_name','college_loc','college_course','college_fees','AllIndia','Open','Minority']]
+		idx=idx[:10]
+		result_final = idx
+		result_final=result_final.to_json(orient='records')
+		data=[]
+		data=json.loads(result_final)	
+		return render(request,'enroll/predict.html',{'data':data})
+
+	if request.method=='POST' and request.POST.get('jc7'):
+		df=pd.read_csv(r"./data/ENGG_MECH_final.csv")
+		count = CountVectorizer(stop_words='english')
+		count_matrix = count.fit_transform(df[['AllIndia']])
+		cosine_sim2 = cosine_similarity(count_matrix, count_matrix)
+		indices = pd.Series(df.index, index=df['college_name'])
+		clgs = [df['AllIndia'][i] for i in range(len(df['AllIndia']))]
+		score=float(request.POST.get('jc7',''))
+		cosine_sim = cosine_similarity(count_matrix, count_matrix)
+		idx=df.loc[df.AllIndia<=score,['college_img','college_name','college_loc','college_course','college_fees','AllIndia','Open','Minority']]
+		idx=idx[:10]
+		result_final = idx
+		result_final=result_final.to_json(orient='records')
+		data=[]
+		data=json.loads(result_final)	
+		return render(request,'enroll/predict.html',{'data':data})
 					
 		return render(request,'enroll/predict.html',{"college_img":ig,"college_name":names,"college_fees":fees,"AllIndia":Ind,"Open":opn,"Minority":minr})
 """-------------------------------------------------------------------------------------------------------------"""
